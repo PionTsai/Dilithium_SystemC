@@ -24,6 +24,8 @@ void ADDER::do_add() {
 }
 */
 
+/*
+// To test the montgomery_reduce() function
 int32_t montgomery_reduce(int64_t a) {
   int32_t t;
 
@@ -31,3 +33,4 @@ int32_t montgomery_reduce(int64_t a) {
   t = (a - (int64_t)t*Q) >> 32;
   return t;
 }
+*/
