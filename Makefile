@@ -6,7 +6,7 @@ LIB=-lsystemc
 export SYSTEMC_HOME=/home/piontsai/systemc-2.3.4
 export LD_LIBRARY_PATH=$(SYSTEMC_HOME)/lib-linux64
 
-SRC=main reduce
+SRC=main reduce poly
 APP=main
 
 all:

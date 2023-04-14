@@ -11,11 +11,17 @@ void MONT_REDUCE::r32_mod_Q() {
 }
 
 void REDUCE32::r_mod_Q() {
-    out = in - ((in + (1 << 22)) >> 23) * Q;
+    while(true) {
+        int32_t a = in.read();
+        out.write(a - ((a + (1 << 22)) >> 23)*Q);
+    }
 }
 
 void CADDQ::add_Q() {
-    out = in + ((in >> 31) & Q);
+    while(true) {
+        int32_t a = in.read();
+        out.write(a + ((a >> 31) & Q));
+    }
 }
 
 /*

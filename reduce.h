@@ -4,10 +4,13 @@
 #include <stdint.h>
 #include "systemc.h"
 
+using namespace std;
+using namespace sc_core;
+
 #define MONT -4186625 // 2^32 % Q
 #define QINV 58728449 // q^(-1) mod 2^32
 
-int32_t montgomery_reduce(int64_t a);
+//int32_t montgomery_reduce(int64_t a);
 
 /*************************************************
 * Module name: MONT_REDUCE
@@ -41,15 +44,12 @@ SC_MODULE(MONT_REDUCE) {
 *        sc_out<int32_t> out: the output r
 **************************************************/
 SC_MODULE(REDUCE32) {
-    sc_in<int32_t>  in;
-    sc_out<int32_t> out;
+    sc_fifo_in<int32_t>  in;
+    sc_fifo_out<int32_t> out;
 
     void r_mod_Q();
 
-    SC_CTOR(REDUCE32) {
-        SC_METHOD(r_mod_Q);
-        sensitive << in;
-    }
+    SC_CTOR(REDUCE32) {SC_THREAD(r_mod_Q);}
 };
 
 /*************************************************
@@ -61,15 +61,12 @@ SC_MODULE(REDUCE32) {
 *        sc_out<int32_t> out: the output a (or a + Q)
 **************************************************/
 SC_MODULE(CADDQ) {
-    sc_in<int32_t>  in;
-    sc_out<int32_t> out;
+    sc_fifo_in<int32_t>  in;
+    sc_fifo_out<int32_t> out;
 
     void add_Q();
 
-    SC_CTOR(CADDQ) {
-        SC_METHOD(add_Q);
-        sensitive << in;
-    }
+    SC_CTOR(CADDQ) {SC_THREAD(add_Q);}
 };
 
 /*************************************************
@@ -82,9 +79,9 @@ SC_MODULE(CADDQ) {
 *        sc_out<int32_t> out: the output r
 **************************************************/
 SC_MODULE(FREEZE) {
-    sc_in<int32_t>  in;
-    sc_out<int32_t> out;
-    sc_signal<int32_t> sig;
+    sc_fifo_in<int32_t>  in;
+    sc_fifo_out<int32_t> out;
+    sc_fifo<int32_t> sig;
     REDUCE32 r32;
     CADDQ aq;
 
